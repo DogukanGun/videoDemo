@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,7 +16,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document("books")
 public class Book extends BaseEntity{
 
+    @NotNull
     private String name;
+    @NotNull
     private String releaseYear;
     private String authorID;
 }

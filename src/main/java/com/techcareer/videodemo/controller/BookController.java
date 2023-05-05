@@ -2,10 +2,15 @@ package com.techcareer.videodemo.controller;
 
 import com.techcareer.videodemo.data.request.CreateBookRequest;
 import com.techcareer.videodemo.data.response.TCResponse;
+import com.techcareer.videodemo.exception.BookException;
+import com.techcareer.videodemo.exception.ErrorResponse;
 import com.techcareer.videodemo.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("book")
@@ -15,9 +20,15 @@ public class BookController {
     private BookService bookService;
 
     @PostMapping("")
-    public ResponseEntity<TCResponse<?>> createBook(@RequestBody CreateBookRequest createBookRequest){
+    public ResponseEntity<TCResponse<?>> createBook(@Valid @RequestBody CreateBookRequest createBookRequest){
         try {
             return ResponseEntity.ok(TCResponse.builder().isSuccess(true).response(bookService.createBook(createBookRequest)).build());
+        }catch (BookException bookException){
+            return ResponseEntity.ok(
+                    TCResponse.<ErrorResponse>builder()
+                            .isSuccess(false)
+                            .response(new ErrorResponse(new ArrayList<>()))
+                            .build());
         }catch (Exception e){
             return ResponseEntity.internalServerError().build();
         }
